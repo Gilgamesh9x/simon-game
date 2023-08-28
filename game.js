@@ -1,20 +1,18 @@
 var buttonColours = ["green", "red", "yellow", "blue"];
-
 var gamePattern = [];
 var userClickedPattern = [];
-
 var level = 0;
-
 var gameStarted = false;
 
-$("button").one('click', function () {
-    gameStarted = true;
+
+$("button").one('click', function () { // the game starts when the button "play" is clicked
     nextSequence();
 })
 
 function nextSequence() {
+    gameStarted = true; // game starts when nextSequence is started
+    $(".btnn").removeClass("no-click"); // because in the delay of 1 sec, we want no clicks
 
-    $("button").addClass("no-click");
     userClickedPattern = []; // we reset the value in the next level
 
     level++;
@@ -25,7 +23,7 @@ function nextSequence() {
     gamePattern.push(randomChosenColor);
     
     //
-    $("#" + randomChosenColor).fadeIn(100).fadeOut(100).fadeIn(100);
+    $("#" + randomChosenColor).fadeIn(100).fadeOut(100).fadeIn(100); // the flash animation
     playSound(randomChosenColor);
 
 }
@@ -38,7 +36,6 @@ $(".btnn").on("click", function() {
         playSound(userChosenColour);
         animatePress(userChosenColour);
         
-        console.log(userClickedPattern);
         checkAnswer(userClickedPattern.length - 1);
     }
 });
@@ -60,27 +57,30 @@ function animatePress(currentColor) {
 
 
 function checkAnswer(currentLevel) {
-
     if (userClickedPattern[currentLevel] === gamePattern[currentLevel]) {
-        console.log("Success.");
 
         if (userClickedPattern.length === gamePattern.length){
+            gameStarted = false; // no user clicks will be entered until the the delay of 1 sec
+            $(".btnn").addClass("no-click");
+            
             setTimeout(function () {
                 nextSequence();
               }, 1000); }
 
     } else {
-        console.log("Wrong.");
         playSound('wrong');
         $('body').addClass("game-over");
         setTimeout(function() {
             $('body').removeClass("game-over")
         }, 200);
         $("h1").text("Game Over.");
+        $(".btnn").addClass("no-click");
+        gameStarted = false; // when game is over, user won't be able to click
         $("button").text('Play Again')
         $("button").removeClass("no-click");
         $("button").one('click', function () {
-            startOver();
+            gameStarted = true;
+            startOver();;
         })
     }
 }
@@ -91,15 +91,6 @@ function startOver() {
     level = 0;
     nextSequence();
 }
-
-
-
-
-
-
-
-
-
 
 
 
