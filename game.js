@@ -11,6 +11,7 @@ $("button").one('click', function () { // the game starts when the button "play"
 
 function nextSequence() {
     gameStarted = true; // game starts when nextSequence is started
+    $("button").addClass("no-click");
     $(".btnn").removeClass("no-click"); // because in the delay of 1 sec, we want no clicks
 
     userClickedPattern = []; // we reset the value in the next level
@@ -57,7 +58,7 @@ function animatePress(currentColor) {
 
 
 function checkAnswer(currentLevel) {
-    if (userClickedPattern[currentLevel] === gamePattern[currentLevel]) {
+    if (userClickedPattern[currentLevel] === gamePattern[currentLevel]) { // here we compare the last elements in the lists
 
         if (userClickedPattern.length === gamePattern.length){
             gameStarted = false; // no user clicks will be entered until the the delay of 1 sec
@@ -68,12 +69,19 @@ function checkAnswer(currentLevel) {
               }, 1000); }
 
     } else {
+        var completedLevel = level - 1; // how many levels completed
+        levelText = ""; // do we wirte level or levels when game is over
+        if (completedLevel == 1) {
+            levelText = "level";
+        } else {
+            levelText = "levels";
+        }
         playSound('wrong');
         $('body').addClass("game-over");
         setTimeout(function() {
             $('body').removeClass("game-over")
         }, 200);
-        $("h1").text("Game Over.");
+        $("h1").text("Game Over. You completed " + completedLevel + ' ' + levelText + '!');
         $(".btnn").addClass("no-click");
         gameStarted = false; // when game is over, user won't be able to click
         $("button").text('Play Again')
@@ -91,8 +99,6 @@ function startOver() {
     level = 0;
     nextSequence();
 }
-
-
 
 
 
